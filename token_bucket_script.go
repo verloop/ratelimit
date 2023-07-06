@@ -1,6 +1,6 @@
 package ratelimit
 
-var tokenBucketScript = `
+var TokenBucketScript = `
 local key = KEYS[1]
 local rate = tonumber(ARGV[1])
 local window = tonumber(ARGV[2])
@@ -64,7 +64,7 @@ end
 return run()
 `
 
-var slidingWindowScript = `
+var SlidingWindowScript = `
 local key = KEYS[1]
 local rate = tonumber(ARGV[1])
 local window = tonumber(ARGV[2])

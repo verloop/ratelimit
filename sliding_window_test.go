@@ -12,10 +12,10 @@ func TestWindow_AllowWithStatus(t *testing.T) {
 	key := "test"
 
 	sw := &SlidingWindow{
-		identifier: "marketing_campaigns",
-		rate:       rate,
-		windowSize: 1000,
-		store:      &store,
+		Identifier: "marketing_campaigns",
+		Rate:       rate,
+		WindowSize: 1000,
+		Store:      &store,
 	}
 	// nextRefresh := time.Duration(b.windowSize) * time.Millisecond
 	for i := 1; i <= rate; i++ {

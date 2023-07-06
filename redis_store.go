@@ -7,8 +7,8 @@ import (
 )
 
 type RedigoStore struct {
-	pool   *redis.Pool
-	script *redis.Script
+	Pool   *redis.Pool
+	Script *redis.Script
 }
 
 func newRedisPool(address string) *redis.Pool {
@@ -27,12 +27,12 @@ func NewRedigoStore(pool *redis.Pool) RedigoStore {
 	conn := pool.Get()
 	defer conn.Close()
 
-	var script = redis.NewScript(1, tokenBucketScript)
+	var script = redis.NewScript(1, TokenBucketScript)
 	err := script.Load(conn)
 	if err != nil {
 		panic(err)
 	}
-	return RedigoStore{pool: pool, script: script}
+	return RedigoStore{Pool: pool, Script: script}
 }
 
 func NewRedigoSWStore(pool *redis.Pool) RedigoStore {
@@ -40,19 +40,19 @@ func NewRedigoSWStore(pool *redis.Pool) RedigoStore {
 	conn := pool.Get()
 	defer conn.Close()
 
-	var script = redis.NewScript(1, slidingWindowScript)
+	var script = redis.NewScript(1, SlidingWindowScript)
 	err := script.Load(conn)
 	if err != nil {
 		panic(err)
 	}
-	return RedigoStore{pool: pool, script: script}
+	return RedigoStore{Pool: pool, Script: script}
 }
 
 func (s *RedigoStore) inc(key string, rate, windowSize, now int) (map[string]int, error) {
-	conn := s.pool.Get()
+	conn := s.Pool.Get()
 	defer conn.Close()
 
-	r, err := redis.IntMap(s.script.Do(conn, key, rate, windowSize, now))
+	r, err := redis.IntMap(s.Script.Do(conn, key, rate, windowSize, now))
 	if err != nil {
 		return nil, err
 	}

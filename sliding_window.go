@@ -6,10 +6,10 @@ import (
 )
 
 type SlidingWindow struct {
-	identifier string
-	rate       int
-	windowSize int
-	store      Store
+	Identifier string
+	Rate       int
+	WindowSize int
+	Store      Store
 }
 
 // The sliding window algorithm
@@ -33,16 +33,16 @@ func (sw *SlidingWindow) Allow(key string) (bool, error) {
 }
 
 func (sw *SlidingWindow) AllowWithStatus(key string) (Status, error) {
-	userKey := fmt.Sprintf("%s:%s", sw.identifier, key)
-	res, err := sw.store.Inc(userKey, sw.rate, sw.windowSize, int(TimeMillis(timeNow())))
+	userKey := fmt.Sprintf("%s:%s", sw.Identifier, key)
+	res, err := sw.Store.Inc(userKey, sw.Rate, sw.WindowSize, int(TimeMillis(timeNow())))
 	if err != nil {
 		return Status{}, err
 	}
 	timeElapsed := timeNow().Sub(res.LastRefill)
 	s := Status{
 		Allowed:     res.Allowed,
-		Remaining:   sw.rate - res.Counter,
-		NextRefresh: timeElapsed + (time.Duration(sw.windowSize) * time.Millisecond),
+		Remaining:   sw.Rate - res.Counter,
+		NextRefresh: timeElapsed + (time.Duration(sw.WindowSize) * time.Millisecond),
 	}
 	return s, nil
 }
