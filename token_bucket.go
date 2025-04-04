@@ -8,10 +8,10 @@ import (
 var timeNow = time.Now
 
 type Bucket struct {
-	identifier string
-	rate       int
-	windowSize int
-	store      Store
+	Identifier string
+	Rate       int
+	WindowSize int
+	Store      Store
 }
 
 type Status struct {
@@ -47,16 +47,16 @@ func (b *Bucket) Allow(key string) (bool, error) {
 }
 
 func (b *Bucket) AllowWithStatus(key string) (Status, error) {
-	userKey := fmt.Sprintf("%s:%s", b.identifier, key)
-	res, err := b.store.Inc(userKey, b.rate, b.windowSize, int(TimeMillis(timeNow())))
+	userKey := fmt.Sprintf("%s:%s", b.Identifier, key)
+	res, err := b.Store.Inc(userKey, b.Rate, b.WindowSize, int(TimeMillis(timeNow())))
 	if err != nil {
 		return Status{}, err
 	}
 	timeElapsed := timeNow().Sub(res.LastRefill)
 	s := Status{
 		Allowed:     res.Allowed,
-		Remaining:   b.rate - res.Counter,
-		NextRefresh: timeElapsed + (time.Duration(b.windowSize) * time.Millisecond),
+		Remaining:   b.Rate - res.Counter,
+		NextRefresh: timeElapsed + (time.Duration(b.WindowSize) * time.Millisecond),
 	}
 	return s, nil
 }
