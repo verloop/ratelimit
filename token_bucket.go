@@ -52,6 +52,7 @@ func (b *Bucket) AllowWithStatus(key string) (Status, error) {
 	if err != nil {
 		return Status{}, err
 	}
+	fmt.Printf("Store Response: %+v", res)
 	timeElapsed := timeNow().Sub(res.LastRefill)
 	s := Status{
 		Allowed:     res.Allowed,
