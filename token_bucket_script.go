@@ -30,7 +30,7 @@ end
 local value = hgetall(key)
 
 local function set(ts, counter)
-    redis.call("HMSET", key, "ts", now, "c", counter)
+    redis.call("HMSET", key, "ts", ts, "c", counter)
     redis.call("EXPIRE", key, default_expiry)
     return {"ts", ts, "c", counter, "s", 1}
 end
