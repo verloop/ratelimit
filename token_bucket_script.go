@@ -42,8 +42,8 @@ local function existing_counter(last_refill, counter)
         return set(last_refill, counter + 1)
     end
     -- current limit has exceeded, lets check if it can be refiled
-    redis.debug("checking limit", last_refill+1000, now)
-    if last_refill + 1000 <= now then
+    redis.debug("checking limit", last_refill+window, now)
+    if last_refill + window <= now then
         -- return redis.error_reply("text")
         return set(now, 1)
     end
